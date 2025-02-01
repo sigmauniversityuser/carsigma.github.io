@@ -1,144 +1,302 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROJECT WNCRY</title>
+    <title>wncry</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000;
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .title-container {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            margin: 0;
-            text-shadow: 0 0 10px #fff;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            margin: 0.5rem 0;
-            text-shadow: 0 0 8px #fff;
-            animation: glow 2s ease-in-out infinite alternate;
-            opacity: 0.9;
-        }
-
-        .helix-container {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            perspective: 1000px;
-            margin-bottom: 2rem;
-        }
-
-        .helix {
-            position: absolute;
+        body { margin: 0; }
+        canvas { display: block; }
+        #endText {
+            position: fixed;
             top: 50%;
             left: 50%;
-            transform-style: preserve-3d;
-            animation: rotate 20s linear infinite;
+            transform: translate(-50%, -50%);
+            font-family: 'Arial Black', sans-serif;
+            font-size: 120px;
+            color: #ff0000;
+            text-shadow: 0 0 20px #000;
+            opacity: 0;
+            transition: opacity 2s;
         }
-
-        .strand {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #fff;
-        }
-
-        .discord-button {
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            background: linear-gradient(45deg, #7289da, #5865F2);
-            border: none;
-            border-radius: 5px;
+        #creakSound {
+            opacity: 0;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: monospace;
             color: white;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(114, 137, 218, 0.5);
-            font-family: 'Courier New', monospace;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .discord-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(114, 137, 218, 0.7);
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotateY(0deg);
-            }
-            to {
-                transform: rotateY(360deg);
-            }
-        }
-
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px #fff;
-            }
-            to {
-                text-shadow: 0 0 20px #fff, 0 0 30px #fff;
-            }
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
-    <div class="title-container">
-        <h1>PROJECT WNCRY</h1>
-        <h2>PSALMS TECH SOURCE IN DISCORD</h2>
-    </div>
-    <div class="helix-container">
-        <div class="helix" id="helix"></div>
-    </div>
-    <a href="https://discord.gg/SMdSgTZt" target="_blank" class="discord-button">Join Discord</a>
-
+    <div id="endText">GG</div>
+    <div id="creakSound">*creak*</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        const helix = document.getElementById('helix');
-        const numberOfPoints = 30;
-        const radius = 100;
-        const height = 300;
+        let scene, camera, renderer;
+        let walkingPath = 0;
+        let lookPhase = 0;
+        let isLooking = false;
+        let doorOpenDelay = false;
+        let isDoorOpen = false;
+        let bats = [];
+        let house, door;
+        let skyCamera = false;
+        let lookAround = { x: 0, y: 0 };
+        
+        function init() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x000033, 1, 30);
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
 
-        for (let i = 0; i < numberOfPoints; i++) {
-         
-            const strand1 = document.createElement('div');
-            strand1.className = 'strand';
-            const angle1 = (i / numberOfPoints) * Math.PI * 2;
-            const y1 = (i / numberOfPoints - 0.5) * height;
-            const x1 = Math.cos(angle1) * radius;
-            const z1 = Math.sin(angle1) * radius;
-            strand1.style.transform = `translate3d(${x1}px, ${y1}px, ${z1}px)`;
-            helix.appendChild(strand1);
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x202020);
+            scene.add(ambientLight);
+            const moonLight = new THREE.DirectionalLight(0xaaaaff, 0.4);
+            moonLight.position.set(1, 2, 3);
+            scene.add(moonLight);
 
-            const strand2 = document.createElement('div');
-            strand2.className = 'strand';
-            const angle2 = angle1 + Math.PI;
-            const x2 = Math.cos(angle2) * radius;
-            const z2 = Math.sin(angle2) * radius;
-            strand2.style.transform = `translate3d(${x2}px, ${y1}px, ${z2}px)`;
-            helix.appendChild(strand2);
+            createGround();
+            createHouse();
+            createSky();
+            createBats();
+            
+            camera.position.set(0, 2, 20);
+            camera.lookAt(0, 2, 0);
+
+            animate();
         }
+
+        function createBats() {
+            const batGeometry = new THREE.BufferGeometry();
+            const wingGeometry = new THREE.BufferGeometry();
+            
+            // Bat body points
+            const vertices = new Float32Array([
+                -0.2, 0, 0,    // body left
+                0.2, 0, 0,     // body right
+                0, 0.1, 0.1    // head
+            ]);
+            
+            // Wing points
+            const wingVertices = new Float32Array([
+                0, 0, 0,       // center
+                0.5, 0.2, 0,   // tip
+                0.3, -0.1, 0   // bottom
+            ]);
+            
+            batGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+            wingGeometry.setAttribute('position', new THREE.BufferAttribute(wingVertices, 3));
+            
+            const batMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
+            
+            for(let i = 0; i < 20; i++) {
+                const bat = new THREE.Group();
+                
+                const body = new THREE.Mesh(batGeometry, batMaterial);
+                const leftWing = new THREE.Mesh(wingGeometry, batMaterial);
+                const rightWing = new THREE.Mesh(wingGeometry, batMaterial);
+                
+                leftWing.scale.x = -1;
+                
+                bat.add(body);
+                bat.add(leftWing);
+                bat.add(rightWing);
+                
+                bat.position.set(0, -10, 4); // Start hidden inside house
+                bat.rotation.y = Math.random() * Math.PI * 2;
+                
+                bat.userData = {
+                    wingAngle: Math.random() * Math.PI * 2,
+                    speed: 0.2 + Math.random() * 0.3,
+                    radius: 1 + Math.random() * 2,
+                    height: Math.random() * 2,
+                    phase: Math.random() * Math.PI * 2
+                };
+                
+                bats.push(bat);
+                scene.add(bat);
+            }
+        }
+
+        function createGround() {
+            const groundGeometry = new THREE.PlaneGeometry(100, 100);
+            const groundMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x1a472a,
+                roughness: 0.8,
+                metalness: 0.2
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.5;
+            scene.add(ground);
+        }
+
+        function createHouse() {
+            house = new THREE.Group();
+
+            // Main house body
+            const walls = new THREE.Mesh(
+                new THREE.BoxGeometry(8, 6, 8),
+                new THREE.MeshPhongMaterial({ 
+                    color: 0x4a3728,
+                    roughness: 0.7,
+                    metalness: 0.2
+                })
+            );
+            walls.position.y = 3;
+            house.add(walls);
+
+            // Roof
+            const roof = new THREE.Mesh(
+                new THREE.ConeGeometry(6, 4, 4),
+                new THREE.MeshPhongMaterial({ color: 0x1a1a1a })
+            );
+            roof.position.y = 8;
+            roof.rotation.y = Math.PI / 4;
+            house.add(roof);
+
+            // Door
+            door = new THREE.Mesh(
+                new THREE.BoxGeometry(1.5, 3, 0.1),
+                new THREE.MeshPhongMaterial({ color: 0x2a1f1d })
+            );
+            door.position.set(0, 1.5, 4);
+            house.add(door);
+
+            // Windows with slight glow
+            const windowGeometry = new THREE.BoxGeometry(1.5, 1.5, 0.1);
+            const windowMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x2a2a2a,
+                emissive: 0x111111
+            });
+
+            const windows = [];
+            [-2, 2].forEach(x => {
+                const window = new THREE.Mesh(windowGeometry, windowMaterial);
+                window.position.set(x, 3.5, 4);
+                windows.push(window);
+                house.add(window);
+            });
+
+            scene.add(house);
+        }
+
+        function createSky() {
+            scene.background = new THREE.Color(0x000033);
+
+            // Stars
+            const starGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+            const starMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            
+            for(let i = 0; i < 200; i++) {
+                const star = new THREE.Mesh(starGeometry, starMaterial);
+                star.position.set(
+                    Math.random() * 100 - 50,
+                    Math.random() * 30 + 10,
+                    Math.random() * 100 - 50
+                );
+                scene.add(star);
+            }
+
+            // Moon
+            const moonGeometry = new THREE.SphereGeometry(2, 32, 32);
+            const moonMaterial = new THREE.MeshBasicMaterial({ color: 0xffffcc });
+            const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+            moon.position.set(20, 15, -20);
+            scene.add(moon);
+        }
+
+        function animateWalkAndLook() {
+            if (walkingPath < 1 && !isLooking) {
+                walkingPath += 0.002; // Slower walk
+                camera.position.z = 20 - (walkingPath * 14);
+                camera.position.y = 2 + Math.sin(walkingPath * 10) * 0.1;
+                camera.position.x = Math.sin(walkingPath * 10) * 0.2;
+                camera.lookAt(0, 2, 0);
+                
+                if (walkingPath >= 1) {
+                    isLooking = true;
+                    setTimeout(() => {
+                        doorOpenDelay = true;
+                        document.getElementById('creakSound').style.opacity = '1';
+                        setTimeout(() => {
+                            document.getElementById('creakSound').style.opacity = '0';
+                            isDoorOpen = true;
+                        }, 1000);
+                    }, 2000);
+                }
+            } else if (isLooking && !doorOpenDelay) {
+                // Looking around sequence
+                lookPhase += 0.02;
+                
+                // Create a looking pattern
+                lookAround.x = Math.sin(lookPhase) * 2;
+                lookAround.y = Math.cos(lookPhase * 0.5) * 0.5;
+                
+                camera.lookAt(lookAround.x, 2 + lookAround.y, 0);
+            }
+        }
+
+        function animateBats() {
+            if (isDoorOpen) {
+                bats.forEach((bat, index) => {
+                    if (bat.position.y < 20) {
+                        // Spiral upward movement
+                        bat.position.y += bat.userData.speed;
+                        bat.position.x = Math.sin(bat.position.y * 0.5 + bat.userData.phase) * bat.userData.radius;
+                        bat.position.z = Math.cos(bat.position.y * 0.5 + bat.userData.phase) * bat.userData.radius + 4;
+                        
+                        // Wing flapping
+                        bat.userData.wingAngle += 0.3;
+                        bat.children[1].rotation.y = Math.sin(bat.userData.wingAngle) * 0.5;
+                        bat.children[2].rotation.y = -Math.sin(bat.userData.wingAngle) * 0.5;
+                    }
+                });
+
+
+                if (!skyCamera && bats[0].position.y > 10) {
+                    skyCamera = true;
+                    document.getElementById('endText').style.opacity = '1';
+                }
+            }
+        }
+
+        function animateDoor() {
+            if (isDoorOpen && door.rotation.y < Math.PI / 3) {
+                door.rotation.y += 0.02;
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            animateWalkAndLook();
+            animateDoor();
+            animateBats();
+
+            if (skyCamera) {
+                // Dramatic camera movement to sky
+                camera.position.y += 0.5;
+                camera.rotation.x -= 0.02;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        init();
     </script>
 </body>
 </html>
+
+Can u edit the door animation
