@@ -1,199 +1,271 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>האתר הוחרם | משטרת ישראל</title>
+    <title>Project WNCRY | Roblox Scripts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        const SOCIAL_LINKS = {
+            discord: "https://discord.gg/sxm6zdSTgt",
+            github: "https://github.com/wncryproject"
+        };
+    </script>
+
     <style>
         :root {
-            --police-blue: #0038b8;
-            --security-red: #cf0a10;
-            --official-gold: #c5a230;
+            --bg: #0a0a0a;
+            --primary: #00ffd5;
+            --secondary: #7000ff;
+            --text: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: #f8f9fa;
-            font-family: Arial, David, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
         }
 
-        .national-banner {
-            background: linear-gradient(to right, #ffffff 50%, var(--police-blue) 50%);
-            height: 80px;
-            border-bottom: 3px solid var(--security-red);
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .cursor2 {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
-        }
-
-        .police-header {
-            background: var(--police-blue);
-            padding: 15px 0;
-            text-align: center;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .main-container {
-            max-width: 1200px;
-            margin: 30px auto;
-            background: white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            border-radius: 5px;
             overflow: hidden;
         }
 
-        .seal-container {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            padding: 30px 0;
-            background: #f0f0f0;
-        }
-
-        .official-seal {
-            height: 140px;
-            padding: 10px;
-            background: white;
-            border: 2px solid var(--police-blue);
-            border-radius: 5px;
-            object-fit: contain;
-        }
-
-        .seizure-alert {
-            background: var(--security-red);
-            color: white;
-            padding: 30px;
-            margin: 20px;
-            border-radius: 5px;
+        .hero-content {
             text-align: center;
+            z-index: 1;
         }
 
-        .hebrew {
-            direction: rtl;
-            text-align: right;
-            font-size: 1.1em;
+        .hero h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 5vw;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeUp 0.8s ease forwards;
         }
 
-        .english {
-            direction: ltr;
-            text-align: left;
+        .hero p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeUp 0.8s ease forwards 0.2s;
         }
 
-        .legal-text {
-            padding: 20px;
-            margin: 20px;
-            border: 1px solid #ddd;
-            background: #f8f8f8;
-        }
-
-        .contact-frame {
-            border: 3px solid var(--police-blue);
-            margin: 20px;
-            padding: 20px;
-            background: #fff;
-            border-radius: 5px;
-        }
-
-        .security-footer {
-            background: #1a1a1a;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .certificate-badge {
-            background: var(--official-gold);
-            color: #000;
-            padding: 10px;
-            margin: 10px;
-            border-radius: 3px;
-            font-family: monospace;
-        }
-
-        .warning-note {
-            color: var(--security-red);
-            border-left: 4px solid var(--security-red);
-            padding-left: 15px;
-            margin: 15px 0;
-        }
-
-        #israel-flag {
-            height: 60px;
+        .hero-bg {
             position: absolute;
-            right: 20px;
-            top: 10px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, 
+                                    rgba(112, 0, 255, 0.1) 0%,
+                                    rgba(0, 255, 213, 0.1) 100%);
+        }
+
+        .gradient-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+        }
+
+        .sphere-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -250px;
+            right: -250px;
+            opacity: 0.15;
+        }
+
+        .sphere-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            bottom: -150px;
+            left: -150px;
+            opacity: 0.15;
+        }
+
+        .cta-button {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 1rem 3rem;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.4s;
+        }
+
+        .cta-button:hover {
+            background: var(--primary);
+            color: var(--bg);
+        }
+
+        .social-links {
+            position: fixed;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            z-index: 100;
+        }
+
+        .social-link {
+            color: var(--text);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .project-card {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .project-title {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-desc {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .social-links {
+                position: fixed;
+                left: 0;
+                bottom: 8rem;
+                top: auto;
+                transform: none;
+                flex-direction: row;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .project-card {
+                width: 90%;
+                max-width: 400px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="national-banner">
-        <img id="israel-flag" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/1200px-Flag_of_Israel.svg.png" alt="דגל ישראל">
+    <div class="cursor"></div>
+    <div class="cursor2"></div>
+
+    <div class="social-links">
+        <a href="#" class="social-link" id="discord-link"><i class="fab fa-discord"></i></a>
+        <a href="#" class="social-link" id="github-link"><i class="fab fa-github"></i></a>
     </div>
 
-    <div class="police-header">
-        <h2>משטרת ישראל - המרכז הלאומי לסייבר</h2>
-        <p>Israel Police - National Cyber Crime Unit</p>
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="gradient-sphere sphere-1"></div>
+            <div class="gradient-sphere sphere-2"></div>
+        </div>
+        <div class="hero-content">
+            <h1>PROJECT WNCRY</h1>
+            <p>Free Roblox Scripts</p>
+            <button class="cta-button" id="discord-button">Join Discord</button>
+        </div>
+    </section>
+
+    <div class="project-card">
+        <div class="project-title">Major Project</div>
+        <div class="project-desc">Obtained and released Psalms.Tech full source</div>
     </div>
 
-    <div class="main-container">
-        <div class="seal-container">
-            <img class="official-seal" 
-                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Emblem_of_Israel.svg/1200px-Emblem_of_Israel.svg.png" 
-                 alt="סמל מדינת ישראל">
-            <img class="official-seal" 
-                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Emblem_of_Israel_Police.svg/1200px-Emblem_of_Israel_Police.svg.png" 
-                 alt="סמל משטרת ישראל">
-        </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            for (const [platform, url] of Object.entries(SOCIAL_LINKS)) {
+                const link = document.getElementById(`${platform}-link`);
+                if (link) link.href = url;
+            }
 
-        <div class="seizure-alert">
-            <h1 class="hebrew">האתר הוחרם בצו בית משפט</h1>
-            <h1 class="english">THIS DOMAIN HAS BEEN SEIZED</h1>
-            <p class="hebrew">צו מס׳ 5678/2024/מ"פ - בית משפט מחוזי ת"א</p>
-            <p class="english">Warrant No. 5678/2024/IP - Tel Aviv District Court</p>
-        </div>
+            const discordButton = document.getElementById('discord-button');
+            discordButton.addEventListener('click', function() {
+                window.open(SOCIAL_LINKS.discord, '_blank');
+            });
+        });
 
-        <div class="legal-text hebrew">
-            <h2>יסוד משפטי להחרמה</h2>
-            <p>בהתאם לסמכות לפי סעיף 35ב לחוק סדר הדין הפלילי (סמכויות אכיפה - נתוני תקשורת), התשע״ח–2017, ובצירוף סעיף 5 לחוק המחשבים, התשנ״ה–1995.</p>
-            <div class="warning-note">
-                <h3>אזהרה:</h3>
-                <p>ניסיונות גישה לא מורשית יטופלו לפי סעיף 16 לחוק ההגנה על מרחב הסייבר</p>
-            </div>
-        </div>
-
-        <div class="legal-text english">
-            <h2>Legal Authority</h2>
-            <p>Pursuant to Section 35b of Criminal Procedure Law 5778-2017, in conjunction with Section 5 of Computer Law 5755-1995.</p>
-            <div class="warning-note">
-                <h3>Warning:</h3>
-                <p>Unauthorized access attempts will be prosecuted under Section 16 of Cyber Defense Law 5778-2018</p>
-            </div>
-        </div>
-
-        <div class="contact-frame hebrew">
-            <h3>פרטי קשר רשמיים:</h3>
-            <p>היחידה הלאומית לאכיפה בסייבר<br>
-            ת.ד 82, ירושלים 9100001<br>
-            טלפון: 110 / 073-3768888<br>
-            דוא"ל: cybercrime@police.gov.il</p>
-        </div>
-
-        <div class="contact-frame english">
-            <h3>Official Contact Details:</h3>
-            <p>National Cyber Crime Unit<br>
-            P.O.B 82, Jerusalem 9100001<br>
-            Phone: 110 / +972-73-3768888<br>
-            Email: cybercrime@police.gov.il</p>
-        </div>
-
-        <div class="security-footer">
-            <div class="certificate-badge">
-                GOV-IL-CERTIFIED | ID: IL-POLICE-5678-2024
-            </div>
-            <p class="hebrew">כל הזכויות שמורות © 2025 - משטרת ישראל</p>
-            <p class="english">Copyright © 2025 - Israel Police</p>
-        </div>
-    </div>
+        document.addEventListener('mousemove', function(e) {
+            const cursor = document.querySelector('.cursor');
+            const cursor2 = document.querySelector('.cursor2');
+            
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursor2.style.left = e.clientX + 'px';
+            cursor2.style.top = e.clientY + 'px';
+        });
+    </script>
 </body>
 </html>
