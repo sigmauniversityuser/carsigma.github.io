@@ -4,7 +4,7 @@
     <title>Project WNCRY | Roblox Scripts</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-    
+
     <script>
         const SOCIAL_LINKS = {
             discord: "https://discord.gg/sxm6zdSTgt",
@@ -93,7 +93,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, 
+            background: radial-gradient(circle at center,
                                     rgba(112, 0, 255, 0.1) 0%,
                                     rgba(0, 255, 213, 0.1) 100%);
         }
@@ -163,18 +163,26 @@
             transform: translateX(5px);
         }
 
-        .project-card {
+        .project-cards {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
             position: fixed;
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        .project-card {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--primary);
             padding: 1.5rem;
             border-radius: 8px;
             text-align: center;
             backdrop-filter: blur(10px);
-            z-index: 100;
+            flex: 1;
+            max-width: 300px;
         }
 
         .project-title {
@@ -211,9 +219,9 @@
                 justify-content: center;
             }
 
-            .project-card {
-                width: 90%;
-                max-width: 400px;
+            .project-cards {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -234,14 +242,21 @@
         </div>
         <div class="hero-content">
             <h1>PROJECT WNCRY</h1>
-            <p>Free Roblox Scripts</p>
+            <p>Free Roblox Scripts (Closed Source)</p>
             <button class="cta-button" id="discord-button">Join Discord</button>
         </div>
     </section>
 
-    <div class="project-card">
-        <div class="project-title">Major Project</div>
-        <div class="project-desc">Obtained and released Psalms.Tech full source</div>
+    <div class="project-cards">
+        <div class="project-card">
+            <div class="project-title">Major Project</div>
+            <div class="project-desc">Obtained and released Psalms.Tech full source</div>
+        </div>
+
+        <div class="project-card">
+            <div class="project-title">New Project</div>
+            <div class="project-desc">Added Elysium Cracked</div>
+        </div>
     </div>
 
     <script>
@@ -260,7 +275,7 @@
         document.addEventListener('mousemove', function(e) {
             const cursor = document.querySelector('.cursor');
             const cursor2 = document.querySelector('.cursor2');
-            
+
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
             cursor2.style.left = e.clientX + 'px';
