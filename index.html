@@ -18,13 +18,14 @@
             --primary: #00ffd5;
             --secondary: #7000ff;
             --text: #ffffff;
+            --red: #ff0000;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none;
+            cursor: crosshair;
         }
 
         body {
@@ -32,26 +33,6 @@
             color: var(--text);
             font-family: 'Space Grotesk', sans-serif;
             overflow-x: hidden;
-        }
-
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        .cursor2 {
-            width: 8px;
-            height: 8px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
         }
 
         .hero {
@@ -183,6 +164,13 @@
             backdrop-filter: blur(10px);
             flex: 1;
             max-width: 300px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .project-card.red {
+            border-color: var(--red);
+            color: var(--red);
+            box-shadow: 0 0 20px var(--red);
         }
 
         .project-title {
@@ -191,9 +179,23 @@
             margin-bottom: 0.5rem;
         }
 
+        .project-title.red {
+            color: var(--red);
+        }
+
         .project-desc {
             color: rgba(255,255,255,0.7);
             font-size: 0.9rem;
+        }
+
+        .project-desc.red {
+            color: rgba(255, 0, 0, 0.7);
+        }
+
+        .project-note {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 0.5rem;
         }
 
         @keyframes fadeUp {
@@ -227,9 +229,6 @@
     </style>
 </head>
 <body>
-    <div class="cursor"></div>
-    <div class="cursor2"></div>
-
     <div class="social-links">
         <a href="#" class="social-link" id="discord-link"><i class="fab fa-discord"></i></a>
         <a href="#" class="social-link" id="github-link"><i class="fab fa-github"></i></a>
@@ -253,9 +252,10 @@
             <div class="project-desc">Obtained and released Psalms.Tech full source</div>
         </div>
 
-        <div class="project-card">
-            <div class="project-title">New Project</div>
-            <div class="project-desc">Added Elisium.lol Cracked</div>
+        <div class="project-card red">
+            <div class="project-title red">Elysium Cracked</div>
+            <div class="project-desc red">Not supported anymore</div>
+            <div class="project-note">100% AI generated shit script</div>
         </div>
     </div>
 
@@ -270,16 +270,6 @@
             discordButton.addEventListener('click', function() {
                 window.open(SOCIAL_LINKS.discord, '_blank');
             });
-        });
-
-        document.addEventListener('mousemove', function(e) {
-            const cursor = document.querySelector('.cursor');
-            const cursor2 = document.querySelector('.cursor2');
-
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            cursor2.style.left = e.clientX + 'px';
-            cursor2.style.top = e.clientY + 'px';
         });
     </script>
 </body>
