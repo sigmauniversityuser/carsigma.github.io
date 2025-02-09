@@ -19,6 +19,7 @@
             --secondary: #7000ff;
             --text: #ffffff;
             --red: #ff0000;
+            --blue: #007bff;
         }
 
         * {
@@ -178,10 +179,9 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .project-card.red {
-            border-color: var(--red);
-            color: var(--red);
-            box-shadow: 0 0 20px var(--red);
+        .project-card.blue {
+            border-color: var(--blue);
+            color: var(--blue);
         }
 
         .project-title {
@@ -190,8 +190,8 @@
             margin-bottom: 0.5rem;
         }
 
-        .project-title.red {
-            color: var(--red);
+        .project-title.blue {
+            color: var(--blue);
         }
 
         .project-desc {
@@ -199,14 +199,21 @@
             font-size: 0.9rem;
         }
 
-        .project-desc.red {
-            color: rgba(255, 0, 0, 0.7);
+        .project-desc.blue {
+            color: rgba(0, 123, 255, 0.7);
         }
 
         .project-note {
             font-size: 0.8rem;
             color: rgba(255,255,255,0.5);
             margin-top: 0.5rem;
+        }
+
+        .additional-info {
+            display: none;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
         }
 
         @keyframes fadeUp {
@@ -351,10 +358,14 @@
             <div class="project-desc">Obtained and released Psalms.Tech full source</div>
         </div>
 
-        <div class="project-card red">
-            <div class="project-title red">Elysium Cracked</div>
-            <div class="project-desc red">Not supported anymore</div>
-            <div class="project-note">100% AI generated shit script</div>
+        <div class="project-card blue" id="elysiumCard">
+            <div class="project-title blue">Elysium Cracked</div>
+            <div class="project-desc blue">v2</div>
+            <div class="project-note blue" id="elysiumToggle">Click for more info</div>
+            <div class="additional-info" id="elysiumInfo">
+                <p>90% confidence this is AI generated.</p>
+                <p>There was a logger, but it has now been removed.</p>
+            </div>
         </div>
     </div>
 
@@ -368,6 +379,17 @@
             const discordButton = document.getElementById('discord-button');
             discordButton.addEventListener('click', function() {
                 window.open(SOCIAL_LINKS.discord, '_blank');
+            });
+
+            const elysiumToggle = document.getElementById('elysiumToggle');
+            const elysiumInfo = document.getElementById('elysiumInfo');
+
+            elysiumToggle.addEventListener('click', function() {
+                if (elysiumInfo.style.display === 'none' || elysiumInfo.style.display === '') {
+                    elysiumInfo.style.display = 'block';
+                } else {
+                    elysiumInfo.style.display = 'none';
+                }
             });
         });
     </script>
