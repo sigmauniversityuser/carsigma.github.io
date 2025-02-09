@@ -33,6 +33,7 @@
             color: var(--text);
             font-family: 'Space Grotesk', sans-serif;
             overflow-x: hidden;
+            animation: backgroundShift 15s infinite linear;
         }
 
         .hero {
@@ -56,7 +57,7 @@
             margin-bottom: 2rem;
             opacity: 0;
             transform: translateY(50px);
-            animation: fadeUp 0.8s ease forwards;
+            animation: fadeUp 0.8s ease forwards, glow 2s infinite alternate;
         }
 
         .hero p {
@@ -65,7 +66,7 @@
             margin-bottom: 3rem;
             opacity: 0;
             transform: translateY(50px);
-            animation: fadeUp 0.8s ease forwards 0.2s;
+            animation: fadeUp 0.8s ease forwards 0.2s, colorChange 5s infinite alternate;
         }
 
         .hero-bg {
@@ -77,6 +78,7 @@
             background: radial-gradient(circle at center,
                                     rgba(112, 0, 255, 0.1) 0%,
                                     rgba(0, 255, 213, 0.1) 100%);
+            animation: gradientMove 5s infinite alternate;
         }
 
         .gradient-sphere {
@@ -92,6 +94,7 @@
             top: -250px;
             right: -250px;
             opacity: 0.15;
+            animation: moveSphere 5s infinite alternate;
         }
 
         .sphere-2 {
@@ -101,6 +104,7 @@
             bottom: -150px;
             left: -150px;
             opacity: 0.15;
+            animation: moveSphere 5s infinite alternate-reverse;
         }
 
         .cta-button {
@@ -114,7 +118,7 @@
             position: relative;
             transition: all 0.3s ease;
             opacity: 0;
-            animation: fadeUp 0.8s ease forwards 0.4s;
+            animation: fadeUp 0.8s ease forwards 0.4s, pulse 2s infinite;
         }
 
         .cta-button:hover {
@@ -131,6 +135,7 @@
             flex-direction: column;
             gap: 2rem;
             z-index: 100;
+            animation: slideIn 1s ease-in-out;
         }
 
         .social-link {
@@ -164,7 +169,13 @@
             backdrop-filter: blur(10px);
             flex: 1;
             max-width: 300px;
-            transition: box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         .project-card.red {
@@ -199,6 +210,94 @@
         }
 
         @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary), 0 0 15px var(--primary);
+            }
+            to {
+                text-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary), 0 0 45px var(--primary);
+            }
+        }
+
+        @keyframes colorChange {
+            from {
+                color: rgba(255,255,255,0.7);
+            }
+            to {
+                color: var(--primary);
+            }
+        }
+
+        @keyframes backgroundShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes gradientMove {
+            0% {
+                transform: scale(1) translateX(0);
+            }
+            50% {
+                transform: scale(1.1) translateX(50px);
+            }
+            100% {
+                transform: scale(1) translateX(0);
+            }
+        }
+
+        @keyframes moveSphere {
+            0% {
+                transform: translateX(0) translateY(0);
+            }
+            50% {
+                transform: translateX(50px) translateY(50px);
+            }
+            100% {
+                transform: translateX(0) translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 var(--primary);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 255, 213, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 255, 213, 0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0);
